@@ -4,4 +4,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgb(37, 37, 37);
+}
+
+#pong {
+  position: relative;
+}
+
+.test {
+  display: block;
+  position: absolute;
+  color: white;
 }

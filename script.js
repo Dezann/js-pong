@@ -14,7 +14,9 @@ import {
   movePaddle
 } from "./gameLogic.js";
 
-let render = () => {
+var isPaused = true;
+
+let renderGame = () => {
   drawRect(0, 0, canvasWidth, canvasHeight, "black");
   drawText(player.score, canvasWidth / 4, canvasHeight / 5, "white");
   drawText(enemy.score, (3 * canvasWidth) / 4, canvasHeight / 5, "white");
@@ -23,6 +25,17 @@ let render = () => {
   drawCircle(ball.x, ball.y, ball.radius, ball.color);
   drawNet();
   resetGameAfterWin();
+};
+
+let renderWelcomeScreen = () => {
+  let playBtn = document.getElementsByClassName("play-btn");
+  drawRect(0, 0, canvasWidth, canvasHeight, "black");
+  drawText("Pong Game", canvasWidth / 2 - 100, canvasHeight / 2, "white");
+  console.log(typeof isPaused);
+  playBtn[0].addEventListener("click", () => {
+    isPaused = false;
+    console.log(isPaused);
+  });
 };
 
 let update = () => {
@@ -46,7 +59,7 @@ let update = () => {
     ball.velocityX = direction * ball.speed * Math.cos(angle);
     ball.velocityY = direction * ball.speed * Math.sin(angle);
 
-    ball.speed += 0.1;
+    ball.speed += 0.5;
   }
 
   if (ball.x - ball.radius < 0) {
@@ -62,14 +75,22 @@ let resetGameAfterWin = () => {
   if (player.score === 3 || enemy.score == 3) {
     player.score = 0;
     enemy.score = 0;
-    render();
+    renderGame();
   }
 };
 
 let game = () => {
-  update();
-  render();
-  decideWinner();
+  if (isPaused) {
+    renderWelcomeScreen();
+  } else {
+    update();
+    renderGame();
+    decideWinner();
+  }
 };
 
-setInterval(game, 1000 / framePerSecond);
+if (isPaused) {
+  setInterval(game, 1000 / framePerSecond);
+} else {
+  game();
+}
